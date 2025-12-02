@@ -23,65 +23,38 @@ public class SpawnController : MonoBehaviour
 
         if (direction > 0) { goLeft = false; goRight = true; } else { goLeft = true; goRight = false; }
 
-        // ⭐ QUYẾT ĐỊNH KÍCH HOẠT: Chọn ngẫu nhiên xem sẽ kích hoạt các vị trí lẻ hay vị trí chẵn.
-        // Điều này đảm bảo các vật thể cách nhau ít nhất một ô trống.
-        bool activateOddPositions = Random.value < 0.5f; 
-
-        // --- Xử lý SpawnersLeft ---
         for(int i = 0; i< spawnersLeft.Count; i++)
         {
-            bool isOdd = (i % 2 != 0);
-            bool shouldActivate = false;
-
-            // 1. Gán Item (GIỮ NGUYÊN logic i % 2)
-            if (isOdd)
+            if (i % 2 != 0)
             {
                 spawnersLeft[i].item = item1;
-                shouldActivate = (activateOddPositions == true); // Kích hoạt nếu là vị trí lẻ và ta chọn vị trí lẻ
+
             }
             else
             {
                 spawnersLeft[i].item = item2;
-                shouldActivate = (activateOddPositions == false); // Kích hoạt nếu là vị trí chẵn và ta chọn vị trí chẵn
+
             }
-            
-            // 2. Kích hoạt/Vô hiệu hóa (Chống chồng chéo)
             spawnersLeft[i].goLeft = goLeft;
-            
-            // Chỉ kích hoạt Spawner nếu hướng di chuyển đúng VÀ nó được chọn để spawn (shouldActivate).
-            spawnersLeft[i].gameObject.SetActive(goRight && shouldActivate); 
-            
+            spawnersLeft[i].gameObject.SetActive(goRight);
             spawnersLeft[i].spawnLeftPos = spawnersLeft[i].transform.position.x;
         }
 
 
-        // --- Xử lý SpawnersRight ---
-        // Lặp lại quyết định kích hoạt tương tự cho đường ray bên phải.
-        activateOddPositions = Random.value < 0.5f; 
-        
         for (int i = 0; i < spawnersRight.Count; i++)
         {
-            bool isOdd = (i % 2 != 0);
-            bool shouldActivate = false;
-            
-            // 1. Gán Item (GIỮ NGUYÊN logic i % 2)
-            if (isOdd)
+            if (i % 2 != 0)
             {
                 spawnersRight[i].item = item1;
-                shouldActivate = (activateOddPositions == true);
+
             }
             else
             {
                 spawnersRight[i].item = item2;
-                shouldActivate = (activateOddPositions == false);
+
             }
-            
-            // 2. Kích hoạt/Vô hiệu hóa (Chống chồng chéo)
             spawnersRight[i].goLeft = goLeft;
-            
-            // Chỉ kích hoạt Spawner nếu hướng di chuyển đúng VÀ nó được chọn để spawn (shouldActivate).
-            spawnersRight[i].gameObject.SetActive(goLeft && shouldActivate);
-            
+            spawnersRight[i].gameObject.SetActive(goLeft);
             spawnersRight[i].spawnLeftPos = spawnersRight[i].transform.position.x;
         }
     }
