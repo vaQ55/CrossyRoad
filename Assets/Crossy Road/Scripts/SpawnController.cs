@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpawnController : MonoBehaviour
 {
+    public PlayerController player;
+    public Transform playerStartPoint;   // vị trí bắt đầu nếu muốn reset
+
     public bool goLeft = false;
     public bool goRight = false;
 

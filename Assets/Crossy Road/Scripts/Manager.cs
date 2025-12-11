@@ -32,12 +32,21 @@ public class Manager : MonoBehaviour
     }
 
     private void Start()
+{
+    // Reset states khi load scene
+    canPlay = true;
+    currentCoins = 0;
+    currentDistance = 0;
+    
+    // Update UI
+    if (coin != null) coin.text = "0";
+    if (distance != null) distance.text = "0";
+    
+    for(int i = 0; i < levelCount; i++)
     {
-        for(int i = 0; i < levelCount; i++)
-        {
-            levelGenerator.RandomGenerator();
-        }
+        levelGenerator.RandomGenerator();
     }
+}
 
     public void UpdateCoinCount(int value)
     {
@@ -83,10 +92,12 @@ public class Manager : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
+        
     }
 
     public void Quit()
     {
         Application.Quit();
     }
+    
 }
