@@ -83,7 +83,25 @@ public class PlayerController : MonoBehaviour
         isMoving = false;
         isJumping = true;
         jumpStart = false;
-        LeanTween.move(this.gameObject, pos, moveTime).setOnComplete(MoveComplete);
+        StartCoroutine(MoveRoutine(pos));
+    }
+
+     IEnumerator MoveRoutine(Vector3 target)
+    {
+        Vector3 start = transform.position;
+        float t = 0;
+
+        while (t < moveTime)
+        {
+            t += Time.deltaTime;
+            float lerp = t / moveTime;
+            transform.position = Vector3.Lerp(start, target, lerp);
+            yield return null;
+        }
+
+        transform.position = target;
+
+        MoveComplete();
     }
 
     void MoveComplete()
@@ -116,4 +134,5 @@ public class PlayerController : MonoBehaviour
         ParticleSystem.EmissionModule em = particle.emission;
         em.enabled = true;
     }
+    
 }
