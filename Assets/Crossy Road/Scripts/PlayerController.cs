@@ -192,15 +192,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnTriggerExit(Collider other)
-    {
-        // Khi rời khỏi vùng an toàn
-        if (other.tag == "Safe")
-        {
-            safeZoneCount--;
-            Debug.Log("Exit safe zone. Count: " + safeZoneCount);
-        }
-    }
+
 
 void OnTriggerExit(Collider other)
 {
