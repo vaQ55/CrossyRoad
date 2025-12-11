@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public float moveDistance = 1;
     public float moveTime = 0.4f;
     public float colliderDistCheck = 1.1f;
+    private int safeZoneCount = 0;
 
     public bool isIdle = true;
     public bool isDead = false;
@@ -166,4 +167,70 @@ public class PlayerController : MonoBehaviour
         var em = particle.emission;
         em.enabled = true;
     }
+     void OnTriggerEnter(Collider other)
+    {
+        // Nếu chạm vào vùng AN TOÀN (bè, cầu, gỗ...)
+        if (other.tag == "Safe") // ← Đổi "Safe" thành tag bạn muốn
+        {
+            safeZoneCount++;
+            Debug.Log("Enter safe zone. Count: " + safeZoneCount);
+        }
+
+        // Nếu chạm vào SÔNG
+        if (other.tag == "Water") // ← Đổi "Water" thành tag sông của bạn
+        {
+            // Chỉ chết nếu KHÔNG đứng trên vùng an toàn
+            if (safeZoneCount == 0)
+            {
+                Debug.Log("Touched water without safe zone → DIE");
+                GetHit();
+            }
+            else
+            {
+                Debug.Log("Touched water but standing on safe zone → SAFE");
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        // Khi rời khỏi vùng an toàn
+        if (other.tag == "Safe")
+        {
+            safeZoneCount--;
+            Debug.Log("Exit safe zone. Count: " + safeZoneCount);
+        }
+    }
+
+void OnTriggerExit(Collider other)
+{
+    if (other.tag == "Safe")
+    {
+        safeZoneCount--;
+        
+        // ❗ CHECK NGAY SAU KHI RỜI BÈ
+        StartCoroutine(CheckWaterAfterLeavingSafe());
+    }
+}
+
+IEnumerator CheckWaterAfterLeavingSafe()
+{
+    yield return new WaitForFixedUpdate(); // Đợi 1 physics frame
+    
+    // Nếu không còn đứng trên Safe và đang trong Water → CHẾT
+    if (safeZoneCount == 0)
+    {
+        // Check xem có đang trigger với Water không
+        Collider[] hits = Physics.OverlapSphere(transform.position, 0.5f);
+        foreach (var hit in hits)
+        {
+            if (hit.tag == "Water")
+            {
+                Debug.Log("Left safe zone and still in water → DIE");
+                GetHit();
+                break;
+            }
+        }
+    }
+}
 }
